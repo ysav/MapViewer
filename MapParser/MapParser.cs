@@ -159,6 +159,8 @@ namespace MapViewer
 
         public bool Run(string filePath, Action<bool> prog_ind)
         {
+            Environment.SetEnvironmentVariable("XTENSA_CORE", "FusionF1Plus");
+
             Sections = new List<Section>();
             AllSections = new string[C_TEXT_ID.Length + C_DATA_ID.Length + C_BSS_ID.Length];
             Array.Copy(C_TEXT_ID, 0, AllSections, 0, C_TEXT_ID.Length);
@@ -398,8 +400,11 @@ namespace MapViewer
                         {
                             j = i + 1;
                             if (j == Map.Count) continue;
-                            // Check if the next line ends with ".o" or ".o)"
-                            if ((Map[j].Length > 2 && String.Compare(".o", 0, Map[j], Map[j].Length - 2, 2) == 0) || (Map[j].Length > 3 && String.Compare(".o)", 0, Map[j], Map[j].Length - 3, 3) == 0))
+                            // Check if the next line ends with ".o", ".o)", ".obj" or ".obj)"
+                            if (
+                                (Map[j].Length > 2 && String.Compare(".o", 0, Map[j], Map[j].Length - 2, 2) == 0) || (Map[j].Length > 3 && String.Compare(".o)", 0, Map[j], Map[j].Length - 3, 3) == 0) ||
+                                (Map[j].Length > 4 && String.Compare(".obj", 0, Map[j], Map[j].Length - 4, 4) == 0) || (Map[j].Length > 5 && String.Compare(".obj)", 0, Map[j], Map[j].Length - 5, 5) == 0)
+                                )
                             {
                                 //Debug.WriteLineIf(DEBUG,"Found sub match at : " + j.ToString() + " " + Map[j].ToString());
                                 Debug.WriteLineIf(DEBUG,Map[j].ToString());
